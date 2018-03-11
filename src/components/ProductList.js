@@ -10,6 +10,7 @@ class ProductList extends Component {
         };
         this.onSave = this.onSave.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
     }
 
     componentWillMount() {
@@ -37,8 +38,21 @@ class ProductList extends Component {
         localStorage.setItem('products', JSON.stringify(products));
     }
 
+    onUpdate(name, price, originalName) {
+        console.log("ProductList.onModify: ", {name, price});
+        let {products} = this.state;
+        products = products.map(product => {
+            if (product.name === originalName) {
+                product.name = name;
+                product.price = price;
+            }
+            return product;
+        });
+        this.setState({products});
+        localStorage.setItem('products', JSON.stringify(products));
+    }
+
     render() {
-        // const {product} = this.state;
         return (
             <div className="product-list">
                 <h1>Product Management</h1>
@@ -46,7 +60,7 @@ class ProductList extends Component {
                 {
                     this.state.products.map(product => {
                         return (
-                            <ProductItem key={product.name} {...product} onDelete={this.onDelete}/>
+                            <ProductItem key={product.name} {...product} onDelete={this.onDelete} onUpdate={this.onUpdate}/>
                         );
                     })
                 }
